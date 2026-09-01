@@ -1,0 +1,28 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --color-cream: #f6f2e4;
+  --color-cream-deep: #ebe4cc;
+  --color-paper: #fffefa;
+  --color-ink: #31352a;
+  --color-ink-soft: #656c58;
+  --color-green: #4c7a45;
+  --color-green-deep: #35592f;
+  --color-sage: #93ae72;
+  --color-gold: #e7b364;
+  --font-sans: var(--font-golos);
+  --font-serif: var(--font-literata);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
