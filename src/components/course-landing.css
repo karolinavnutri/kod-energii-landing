@@ -48,6 +48,32 @@ html {
   text-transform: uppercase;
   color: var(--l-green-deep);
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.landing-root .kicker::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 11px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    currentColor 0,
+    currentColor 1px,
+    transparent 1px,
+    transparent 3px,
+    currentColor 3px,
+    currentColor 5px,
+    transparent 5px,
+    transparent 6px
+  );
+  opacity: 0.8;
+  flex: none;
+}
+.landing-root .recognize .kicker::before,
+.landing-root .outcome-inner .kicker::before {
+  opacity: 0.7;
 }
 
 .landing-root .wrap {
@@ -97,11 +123,51 @@ html {
   z-index: 2;
 }
 .landing-root .brand-name {
-  font-family: var(--font-display), serif;
-  font-size: 1.15rem;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.landing-root .brand-code {
+  font-family: var(--font-code), monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
   color: var(--l-green-deep);
-  letter-spacing: 0.01em;
+  letter-spacing: 0.06em;
+}
+.landing-root .brand-word {
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--l-ink);
+}
+
+/* ---------- CODE RAIN (digits dissolving into nature) ---------- */
+.landing-root .code-rain-layer {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ---------- CODE STRIPES (recurring brand motif) ---------- */
+.landing-root .code-stripes {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 16px;
+}
+.landing-root .code-stripes span {
+  display: block;
+  height: 100%;
+  background: var(--l-green);
+  border-radius: 1px;
+}
+.landing-root .code-stripes.light span {
+  background: var(--l-sage);
+}
+.landing-root .code-stripes.small {
+  height: 11px;
 }
 
 /* ---------- HERO ---------- */
@@ -230,6 +296,8 @@ html {
   padding: 20px;
 }
 .landing-root .mosaic-quote span {
+  position: relative;
+  z-index: 2;
   font-family: var(--font-display), serif;
   font-style: italic;
   font-size: 1.2rem;
@@ -270,7 +338,7 @@ html {
   left: 28px;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 1;
+  z-index: 2;
   font-family: var(--font-display), serif;
   font-style: italic;
   font-size: 1.7rem;
@@ -357,11 +425,24 @@ html {
 }
 .landing-root .program-item {
   background: var(--l-paper);
-  padding: 30px 34px;
+  padding: 24px 34px;
   display: grid;
-  grid-template-columns: 90px 1fr auto;
+  grid-template-columns: 76px 70px 1fr auto;
   gap: 24px;
-  align-items: start;
+  align-items: center;
+}
+.landing-root .program-photo {
+  width: 76px;
+  height: 76px;
+  border-radius: 16px;
+  overflow: hidden;
+  flex: none;
+}
+.landing-root .program-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .landing-root .program-item .week-label {
   font-family: var(--font-display), serif;
@@ -405,7 +486,8 @@ html {
 .landing-root .value-item p { font-size: 1.02rem; }
 
 /* ---------- RECOGNIZE ---------- */
-.landing-root .recognize { background: var(--l-ink); color: var(--l-cream); }
+.landing-root .recognize { background: var(--l-ink); color: var(--l-cream); overflow: hidden; }
+.landing-root .recognize > .wrap { position: relative; z-index: 2; }
 .landing-root .recognize .kicker { color: #b7d69a; }
 .landing-root .recognize .section-head h2 { color: var(--l-paper); }
 .landing-root .pain-list {
@@ -469,6 +551,7 @@ html {
   position: absolute;
   top: -14px;
   left: 28px;
+  z-index: 2;
   background: var(--l-gold);
   color: var(--l-ink);
   font-size: 0.76rem;
@@ -607,7 +690,28 @@ html {
 .landing-root .author-link:hover { color: var(--l-green); }
 
 /* ---------- FOOTER CTA ---------- */
-.landing-root .final-cta { text-align: center; padding: 110px 0 90px; }
+.landing-root .final-cta {
+  text-align: center;
+  padding: 110px 0 90px;
+  position: relative;
+  overflow: hidden;
+}
+.landing-root .final-cta-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.landing-root .final-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(246, 242, 228, 0.9);
+  z-index: 0;
+}
+.landing-root .final-cta .wrap { position: relative; z-index: 1; }
 .landing-root .final-cta h2 { font-size: clamp(2rem, 4vw, 2.7rem); max-width: 22ch; margin: 0 auto 20px; }
 .landing-root .final-cta p { color: var(--l-ink-soft); max-width: 46ch; margin: 0 auto 28px; }
 .landing-root .final-cta .btn { width: auto; padding: 18px 40px; }

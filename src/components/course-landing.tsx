@@ -64,6 +64,66 @@ const CHECK_ICON = (
   </svg>
 );
 
+const STRIPE_WIDTHS = [2, 1, 3, 1, 2, 1, 4, 1, 2];
+
+function CodeStripes({ className = '' }: { className?: string }) {
+  return (
+    <span className={`code-stripes ${className}`} aria-hidden="true">
+      {STRIPE_WIDTHS.map((w, i) => (
+        <span key={i} style={{ width: w }} />
+      ))}
+    </span>
+  );
+}
+
+// A hand-placed (not random, so server/client render identically) scatter of 0/1
+// glyphs — the "digital rain dissolving into nature" motif, built as our own SVG
+// rather than reusing the watermarked stock photos as reference.
+const RAIN_GLYPHS = [
+  { x: 4, y: 16, t: '01', s: 11 },
+  { x: 30, y: 9, t: '1', s: 9 },
+  { x: 54, y: 22, t: '0', s: 10 },
+  { x: 78, y: 12, t: '10', s: 11 },
+  { x: 12, y: 40, t: '0', s: 9 },
+  { x: 40, y: 46, t: '11', s: 10 },
+  { x: 66, y: 38, t: '1', s: 11 },
+  { x: 90, y: 48, t: '01', s: 9 },
+  { x: 8, y: 68, t: '1', s: 10 },
+  { x: 34, y: 74, t: '0', s: 11 },
+  { x: 58, y: 64, t: '10', s: 9 },
+  { x: 84, y: 76, t: '0', s: 10 },
+  { x: 18, y: 96, t: '01', s: 9 },
+  { x: 46, y: 102, t: '1', s: 11 },
+  { x: 70, y: 92, t: '0', s: 10 },
+  { x: 96, y: 104, t: '11', s: 9 },
+];
+
+function codeRainBackground(color: string) {
+  const glyphs = RAIN_GLYPHS.map(
+    (g) => `<text x='${g.x}' y='${g.y}' font-family='monospace' font-size='${g.s}' fill='${color}'>${g.t}</text>`,
+  ).join('');
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='110' height='110'>${glyphs}</svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+
+function CodeRain({
+  color = '#8fd17a',
+  opacity = 0.5,
+  blend = 'screen' as const,
+}: {
+  color?: string;
+  opacity?: number;
+  blend?: 'screen' | 'normal' | 'soft-light' | 'multiply';
+}) {
+  return (
+    <div
+      className="code-rain-layer"
+      aria-hidden="true"
+      style={{ backgroundImage: codeRainBackground(color), opacity, mixBlendMode: blend }}
+    />
+  );
+}
+
 const PROGRAM = [
   {
     week: '01',
@@ -71,6 +131,7 @@ const PROGRAM = [
     status: 'ready' as const,
     description:
       'Как устроена твоя нервная система, определение своего типа дисфункции (гипо-реактивный / гипер-реактивный / смешанный) через расширенный тест, персональный протокол с практиками и БАДами под тип.',
+    photo: 'https://images.unsplash.com/photo-1695186376192-225e563b02e0?w=400&q=75&fit=crop&auto=format',
   },
   {
     week: '02',
@@ -78,6 +139,7 @@ const PROGRAM = [
     status: 'progress' as const,
     description:
       'Урок по висцеральному массажу от приглашённого специалиста, определение типа питания по Аюрведе, схемы восстановления для всех отделов ЖКТ.',
+    photo: 'https://images.unsplash.com/photo-1536511397145-ad62741fdf3c?w=400&q=75&fit=crop&auto=format',
   },
   {
     week: '03',
@@ -85,6 +147,7 @@ const PROGRAM = [
     status: 'progress' as const,
     description:
       'Работа с датчиком глюкозы (по желанию — можно пройти неделю и без него), что такое гликация и почему это ускоряет старение, практические рычаги стабилизации сахара.',
+    photo: 'https://images.unsplash.com/photo-1568387022280-92935eb78c5a?w=400&q=75&fit=crop&auto=format',
   },
   {
     week: '04',
@@ -92,6 +155,7 @@ const PROGRAM = [
     status: 'progress' as const,
     description:
       'Лекция от приглашённого специалиста по ФМД, меню для протокола, совместное прохождение протокола в группе, варианты меню под разные типы.',
+    photo: 'https://images.unsplash.com/photo-1758221056836-e5b235180762?w=400&q=75&fit=crop&auto=format',
   },
 ];
 
@@ -146,6 +210,7 @@ function TierCard({ tier, popular, discountActive, remaining }: { tier: TierId; 
 
   return (
     <div className={`pricing-card${popular ? ' popular' : ''}`}>
+      {popular && <CodeRain opacity={0.3} />}
       {popular && <span className="pricing-badge">Популярный выбор</span>}
       <div className="pricing-name">{data.name}</div>
       <div className="pricing-desc">{data.description}</div>
@@ -202,11 +267,15 @@ export function CourseLanding({
   return (
     <div className="landing-root" ref={rootRef}>
       <div className="wrap brand-bar">
-        <span className="brand-name">Код Энергии</span>
+        <span className="brand-name">
+          <CodeStripes />
+          <span className="brand-code">КОД</span> <span className="brand-word">энергии</span>
+        </span>
       </div>
       <header className="hero">
         <div className="hero-blob" />
         <div className="hero-blob two" />
+        <CodeRain color="#35592f" opacity={0.22} blend="soft-light" />
         <div className="wrap hero-inner">
           <div>
             <span className="kicker">Код Энергии · курс, 4 недели</span>
@@ -241,8 +310,10 @@ export function CourseLanding({
               src="https://images.unsplash.com/photo-1568387022280-92935eb78c5a?w=900&q=80&fit=crop&auto=format"
               alt=""
             />
+            <CodeRain color="#1f3a1c" opacity={0.35} blend="multiply" />
           </div>
           <div className="mosaic-tile mosaic-b mosaic-quote">
+            <CodeRain />
             <span>Не выгорание.
 Система.</span>
           </div>
@@ -258,7 +329,7 @@ export function CourseLanding({
           </div>
           <div className="mosaic-tile mosaic-e">
             <img
-              src="https://images.unsplash.com/photo-1665513325776-c6bbe99b1a79?w=700&q=80&fit=crop&auto=format"
+              src="https://images.unsplash.com/photo-1758221056836-e5b235180762?w=700&q=80&fit=crop&auto=format"
               alt=""
             />
           </div>
@@ -267,6 +338,7 @@ export function CourseLanding({
               src="https://images.unsplash.com/photo-1695186376192-225e563b02e0?w=1400&q=75&fit=crop&auto=format"
               alt=""
             />
+            <CodeRain opacity={0.6} />
             <span className="mosaic-banner-text">Вернуть ресурс.</span>
           </div>
         </div>
@@ -307,6 +379,9 @@ export function CourseLanding({
           <div className="program-list reveal">
             {PROGRAM.map((item) => (
               <div key={item.week} className="program-item">
+                <div className="program-photo">
+                  <img src={item.photo} alt="" />
+                </div>
                 <div className="week-label">{item.week}</div>
                 <div>
                   <h3>{item.title}</h3>
@@ -349,6 +424,7 @@ export function CourseLanding({
       </section>
 
       <section className="recognize">
+        <CodeRain opacity={0.35} />
         <div className="wrap">
           <div className="section-head reveal">
             <span className="kicker">Узнаёшь себя?</span>
@@ -576,6 +652,11 @@ export function CourseLanding({
       </section>
 
       <section className="final-cta">
+        <img
+          className="final-cta-bg"
+          src="https://images.unsplash.com/photo-1568387022280-92935eb78c5a?w=1600&q=70&fit=crop&auto=format"
+          alt=""
+        />
         <div className="wrap">
           <span className="kicker reveal">Пора начать</span>
           <h2 className="reveal">4 недели. Твоя система, твой протокол, твой ответ.</h2>
