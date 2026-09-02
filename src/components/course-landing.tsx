@@ -106,6 +106,144 @@ function codeRainBackground(color: string) {
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
 
+// Renders a photo as a mosaic of 0/1 characters — density and brightness follow the
+// original pixel tones, so the subject stays readable while the image itself reads as
+// "made of code". Runs client-side on a canvas rather than shipping a pre-rendered asset.
+function AsciiPhoto({ src, alt }: { src: string; alt: string }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const wrap = wrapRef.current;
+    if (!canvas || !wrap) return;
+
+    const img = new Image();
+    img.src = src;
+    img.onload = () => {
+      const width = wrap.clientWidth;
+      const height = wrap.clientHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.scale(dpr, dpr);
+
+      // Cover-fit the source image into width x height, same math as CSS object-fit: cover,
+      // so the sampled grid lines up with what a plain <img> would have shown.
+      const srcRatio = img.naturalWidth / img.naturalHeight;
+      const dstRatio = width / height;
+      let sw = img.naturalWidth;
+      let sh = img.naturalHeight;
+      let sx = 0;
+      let sy = 0;
+      if (srcRatio > dstRatio) {
+        sw = img.naturalHeight * dstRatio;
+        sx = (img.naturalWidth - sw) / 2;
+      } else {
+        sh = img.naturalWidth / dstRatio;
+        sy = (img.naturalHeight - sh) / 2;
+      }
+
+      // 1. The photo itself, dimmed and green-tinted, so the subject stays recognisable.
+      ctx.filter = 'grayscale(1) brightness(0.55) sepia(1) hue-rotate(60deg) saturate(2.4)';
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, width, height);
+      ctx.filter = 'none';
+      ctx.fillStyle = 'rgba(10, 20, 10, 0.35)';
+      ctx.fillRect(0, 0, width, height);
+
+      // 2. Sample the same cropped region at a coarse grid for the digit overlay.
+      const cols = 40;
+      const cellSize = width / cols;
+      const rows = Math.round(height / cellSize);
+      const sample = document.createElement('canvas');
+      sample.width = cols;
+      sample.height = rows;
+      const sctx = sample.getContext('2d');
+      if (!sctx) return;
+      sctx.drawImage(img, sx, sy, sw, sh, 0, 0, cols, rows);
+      const { data } = sctx.getImageData(0, 0, cols, rows);
+
+      ctx.font = `${cellSize * 0.85}px var(--font-code), monospace`;
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'center';
+      ctx.globalCompositeOperation = 'lighter';
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const i = (row * cols + col) * 4;
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          const brightness = (r + g * 1.4 + b) / (2.4 * 255); // 0..~1.4, green-weighted
+          const char = (row * 7 + col * 3) % 2 === 0 ? '0' : '1';
+          const alpha = Math.max(0, Math.min(1, brightness - 0.15)) * 0.7;
+          if (alpha < 0.03) continue;
+          ctx.fillStyle = `rgba(150, 235, 130, ${alpha.toFixed(2)})`;
+          ctx.fillText(char, col * cellSize + cellSize / 2, row * cellSize + cellSize / 2);
+        }
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    };
+  }, [src]);
+
+  return (
+    <div className="ascii-photo" ref={wrapRef} role="img" aria-label={alt}>
+      <canvas ref={canvasRef} />
+    </div>
+  );
+}
+
+// "Scanned" data-point overlay — a fixed (non-random) scatter of dots with thin
+// connecting lines and coordinate-looking labels, echoing the analysed/measured feel
+// of the biotech references rather than plain decorative sparkle.
+const DATA_POINTS = [
+  { x: 18, y: 22, label: '4.02' },
+  { x: 62, y: 14, label: '118.6' },
+  { x: 82, y: 46, label: '0.94' },
+  { x: 34, y: 58, label: '27.15' },
+  { x: 70, y: 78, label: '5.3' },
+  { x: 12, y: 82, label: '61.2' },
+];
+const DATA_LINES: [number, number][] = [
+  [0, 1],
+  [1, 2],
+  [0, 3],
+  [3, 4],
+  [4, 2],
+  [3, 5],
+];
+
+function DataPoints() {
+  return (
+    <svg className="data-points" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      {DATA_LINES.map(([a, b], i) => (
+        <line
+          key={i}
+          x1={DATA_POINTS[a].x}
+          y1={DATA_POINTS[a].y}
+          x2={DATA_POINTS[b].x}
+          y2={DATA_POINTS[b].y}
+          stroke="rgba(180,230,160,0.55)"
+          strokeWidth={0.25}
+        />
+      ))}
+      {DATA_POINTS.map((p, i) => (
+        <g key={i}>
+          <circle cx={p.x} cy={p.y} r={0.9} fill="#c8ecb0" />
+          <text x={p.x + 2} y={p.y - 1.5} fontSize={3} fontFamily="var(--font-code), monospace" fill="#e7f5dc">
+            {p.label}
+          </text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
 function CodeRain({
   color = '#8fd17a',
   opacity = 0.5,
@@ -143,15 +281,15 @@ const PROGRAM = [
   },
   {
     week: '03',
-    title: 'Гликация и сахар',
+    title: 'Углеводный обмен',
     status: 'progress' as const,
     description:
-      'Работа с датчиком глюкозы (по желанию — можно пройти неделю и без него), что такое гликация и почему это ускоряет старение, практические рычаги стабилизации сахара.',
-    photo: 'https://images.unsplash.com/photo-1568387022280-92935eb78c5a?w=400&q=75&fit=crop&auto=format',
+      'Работа с датчиком глюкозы (по желанию — можно пройти неделю и без него), что такое гликация и почему она ускоряет старение, практические рычаги стабилизации сахара.',
+    photo: 'https://images.unsplash.com/photo-1746415117048-794ef93871d5?w=400&q=75&fit=crop&auto=format',
   },
   {
     week: '04',
-    title: 'Антиэйдж и ФМД-протокол',
+    title: 'Система питания для молодости',
     status: 'progress' as const,
     description:
       'Лекция от приглашённого специалиста по ФМД, меню для протокола, совместное прохождение протокола в группе, варианты меню под разные типы.',
@@ -283,8 +421,8 @@ export function CourseLanding({
               Как избавиться от <span className="hl">хронической усталости</span> и вернуть ресурс за 4 недели
             </h1>
             <p className="lead">
-              4 недели системной работы с четырьмя причинами хронической усталости: нервная система, ЖКТ, сахар,
-              старение и восстановление. Не разовый лайфхак, а рабочий протокол под тебя.
+              4 недели системной работы с причинами хронической усталости: нервная система, ЖКТ, углеводный обмен.
+              И в завершение — система питания для молодости. Не разовые лайфхаки, а рабочие протоколы под тебя.
             </p>
             {discountActive && countdown && (
               <div className="countdown">
@@ -298,7 +436,7 @@ export function CourseLanding({
             </div>
           </div>
           <div className="hero-photo">
-            <img src="/images/author/karolina.jpg" alt="Каролина Герасимова" />
+            <AsciiPhoto src="/images/author/karolina.jpg" alt="Каролина Герасимова" />
           </div>
         </div>
       </header>
@@ -307,7 +445,7 @@ export function CourseLanding({
         <div className="wrap mosaic reveal">
           <div className="mosaic-tile mosaic-a">
             <img
-              src="https://images.unsplash.com/photo-1568387022280-92935eb78c5a?w=900&q=80&fit=crop&auto=format"
+              src="https://images.unsplash.com/photo-1746415117048-794ef93871d5?w=900&q=80&fit=crop&auto=format"
               alt=""
             />
             <CodeRain color="#1f3a1c" opacity={0.35} blend="multiply" />
@@ -332,6 +470,7 @@ export function CourseLanding({
               src="https://images.unsplash.com/photo-1758221056836-e5b235180762?w=700&q=80&fit=crop&auto=format"
               alt=""
             />
+            <DataPoints />
           </div>
           <div className="mosaic-tile mosaic-f mosaic-banner">
             <img
@@ -397,6 +536,7 @@ export function CourseLanding({
       </section>
 
       <section className="value">
+        <CodeRain opacity={0.3} />
         <div className="wrap">
           <div className="section-head reveal">
             <span className="kicker">Что ты получишь</span>
@@ -654,7 +794,7 @@ export function CourseLanding({
       <section className="final-cta">
         <img
           className="final-cta-bg"
-          src="https://images.unsplash.com/photo-1568387022280-92935eb78c5a?w=1600&q=70&fit=crop&auto=format"
+          src="https://images.unsplash.com/photo-1746415117048-794ef93871d5?w=1600&q=70&fit=crop&auto=format"
           alt=""
         />
         <div className="wrap">

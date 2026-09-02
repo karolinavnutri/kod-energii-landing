@@ -141,6 +141,16 @@ html {
   color: var(--l-ink);
 }
 
+/* ---------- DATA POINTS (scanned/measured overlay) ---------- */
+.landing-root .data-points {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
 /* ---------- CODE RAIN (digits dissolving into nature) ---------- */
 .landing-root .code-rain-layer {
   position: absolute;
@@ -240,6 +250,13 @@ html {
   object-fit: cover;
   display: block;
 }
+.landing-root .ascii-photo {
+  width: 100%;
+  height: 100%;
+}
+.landing-root .ascii-photo canvas {
+  display: block;
+}
 .landing-root .countdown {
   display: inline-flex;
   align-items: center;
@@ -258,7 +275,7 @@ html {
 
 /* ---------- MOSAIC ---------- */
 .landing-root .mosaic-section {
-  padding: 0 0 90px;
+  padding: 0 0 60px;
 }
 .landing-root .mosaic {
   display: grid;
@@ -360,12 +377,12 @@ html {
 
 /* ---------- SECTION GENERIC ---------- */
 .landing-root section {
-  padding: 90px 0;
+  padding: 60px 0;
   position: relative;
 }
 .landing-root .section-head {
   max-width: 640px;
-  margin-bottom: 52px;
+  margin-bottom: 34px;
 }
 .landing-root .section-head h2 {
   font-size: clamp(1.8rem, 3vw, 2.4rem);
@@ -465,25 +482,28 @@ html {
 .landing-root .program-status.progress { background: rgba(231, 179, 100, 0.22); color: #8a5a1e; }
 
 /* ---------- VALUE ---------- */
-.landing-root .value { background: var(--l-cream-deep); }
+.landing-root .value { background: var(--l-ink); color: var(--l-cream); overflow: hidden; }
+.landing-root .value > .wrap { position: relative; z-index: 2; }
+.landing-root .value .kicker { color: #b7d69a; }
+.landing-root .value .section-head h2 { color: var(--l-paper); }
 .landing-root .value-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2px;
-  background: var(--l-line);
+  gap: 1px;
+  background: rgba(255,255,255,0.14);
   border-radius: var(--l-radius);
   overflow: hidden;
-  border: 1px solid var(--l-line);
+  border: 1px solid rgba(255,255,255,0.14);
 }
-.landing-root .value-item { background: var(--l-paper); padding: 38px; }
+.landing-root .value-item { background: rgba(255,255,255,0.06); padding: 38px; }
 .landing-root .value-item .num {
-  font-family: var(--font-display), serif;
-  font-size: 1.1rem;
-  color: var(--l-green);
+  font-family: var(--font-code), monospace;
+  font-size: 1rem;
+  color: #b7d69a;
   margin-bottom: 14px;
   display: block;
 }
-.landing-root .value-item p { font-size: 1.02rem; }
+.landing-root .value-item p { font-size: 1.02rem; color: #ede9d8; }
 
 /* ---------- RECOGNIZE ---------- */
 .landing-root .recognize { background: var(--l-ink); color: var(--l-cream); overflow: hidden; }
@@ -692,7 +712,7 @@ html {
 /* ---------- FOOTER CTA ---------- */
 .landing-root .final-cta {
   text-align: center;
-  padding: 110px 0 90px;
+  padding: 80px 0 70px;
   position: relative;
   overflow: hidden;
 }
