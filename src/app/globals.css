@@ -10,8 +10,8 @@
   --color-green-deep: #35592f;
   --color-sage: #93ae72;
   --color-gold: #e7b364;
-  --font-sans: var(--font-golos);
-  --font-serif: var(--font-literata);
+  --font-sans: var(--font-sans-ui);
+  --font-serif: var(--font-display);
 }
 
 html {

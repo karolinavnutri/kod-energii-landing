@@ -234,6 +234,44 @@ export function CourseLanding({
         </div>
       </header>
 
+      <section className="mosaic-section">
+        <div className="wrap mosaic reveal">
+          <div className="mosaic-tile mosaic-a">
+            <img
+              src="https://images.unsplash.com/photo-1568387022280-92935eb78c5a?w=900&q=80&fit=crop&auto=format"
+              alt=""
+            />
+          </div>
+          <div className="mosaic-tile mosaic-b mosaic-quote">
+            <span>Не выгорание.
+Система.</span>
+          </div>
+          <div className="mosaic-tile mosaic-c">
+            <img
+              src="https://images.unsplash.com/photo-1536511397145-ad62741fdf3c?w=700&q=80&fit=crop&auto=format"
+              alt=""
+            />
+          </div>
+          <div className="mosaic-tile mosaic-d mosaic-stat">
+            <span className="mosaic-stat-num">4×4</span>
+            <span>недели · причины усталости</span>
+          </div>
+          <div className="mosaic-tile mosaic-e">
+            <img
+              src="https://images.unsplash.com/photo-1665513325776-c6bbe99b1a79?w=700&q=80&fit=crop&auto=format"
+              alt=""
+            />
+          </div>
+          <div className="mosaic-tile mosaic-f mosaic-banner">
+            <img
+              src="https://images.unsplash.com/photo-1695186376192-225e563b02e0?w=1400&q=75&fit=crop&auto=format"
+              alt=""
+            />
+            <span className="mosaic-banner-text">Вернуть ресурс.</span>
+          </div>
+        </div>
+      </section>
+
       <section className="pillars">
         <div className="wrap">
           <div className="section-head reveal">
@@ -242,32 +280,17 @@ export function CourseLanding({
           </div>
           <div className="pillar-grid">
             <div className="pillar-card reveal">
-              <div className="pillar-photo">
-                <img
-                  src="https://images.unsplash.com/photo-1568387022280-92935eb78c5a?w=800&q=80&fit=crop&auto=format"
-                  alt=""
-                />
-              </div>
+              <span className="pillar-num">01</span>
               <h3>Видео-урок недели</h3>
               <p>Разбор одной системы организма за раз — без перегруза теорией сразу по всем направлениям.</p>
             </div>
             <div className="pillar-card reveal">
-              <div className="pillar-photo">
-                <img
-                  src="https://images.unsplash.com/photo-1536511397145-ad62741fdf3c?w=800&q=80&fit=crop&auto=format"
-                  alt=""
-                />
-              </div>
+              <span className="pillar-num">02</span>
               <h3>Домашнее действие</h3>
               <p>Конкретный шаг под неделю — встраивается в день, а не требует отдельных часов.</p>
             </div>
             <div className="pillar-card reveal">
-              <div className="pillar-photo">
-                <img
-                  src="https://images.unsplash.com/photo-1665513325776-c6bbe99b1a79?w=800&q=80&fit=crop&auto=format"
-                  alt=""
-                />
-              </div>
+              <span className="pillar-num">03</span>
               <h3>Материалы для скачивания</h3>
               <p>Протоколы, чек-листы и схемы — остаются под рукой, не только на время урока.</p>
             </div>

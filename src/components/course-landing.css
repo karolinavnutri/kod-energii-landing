@@ -19,7 +19,7 @@ html {
 
   background: var(--l-cream);
   color: var(--l-ink);
-  font-family: var(--font-golos), sans-serif;
+  font-family: var(--font-sans-ui), sans-serif;
   font-size: 17px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -35,14 +35,14 @@ html {
 .landing-root h1,
 .landing-root h2,
 .landing-root h3 {
-  font-family: var(--font-literata), serif;
+  font-family: var(--font-display), serif;
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: -0.01em;
 }
 
 .landing-root .kicker {
-  font-family: var(--font-golos), sans-serif;
+  font-family: var(--font-sans-ui), sans-serif;
   font-size: 0.8rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -70,7 +70,7 @@ html {
   border: none;
   padding: 17px 30px;
   border-radius: 999px;
-  font-family: var(--font-golos), sans-serif;
+  font-family: var(--font-sans-ui), sans-serif;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -97,7 +97,7 @@ html {
   z-index: 2;
 }
 .landing-root .brand-name {
-  font-family: var(--font-literata), serif;
+  font-family: var(--font-display), serif;
   font-size: 1.15rem;
   font-weight: 600;
   color: var(--l-green-deep);
@@ -153,6 +153,7 @@ html {
 }
 .landing-root .hero h1 .hl {
   color: var(--l-green);
+  font-style: italic;
 }
 .landing-root .hero p.lead {
   font-size: 1.12rem;
@@ -187,6 +188,106 @@ html {
 }
 .landing-root .countdown strong {
   color: var(--l-green-deep);
+}
+
+/* ---------- MOSAIC ---------- */
+.landing-root .mosaic-section {
+  padding: 0 0 90px;
+}
+.landing-root .mosaic {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 170px 170px 170px;
+  grid-template-areas:
+    "a a b c"
+    "a a d e"
+    "f f f f";
+  gap: 14px;
+}
+.landing-root .mosaic-tile {
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+}
+.landing-root .mosaic-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.landing-root .mosaic-a { grid-area: a; }
+.landing-root .mosaic-b { grid-area: b; }
+.landing-root .mosaic-c { grid-area: c; }
+.landing-root .mosaic-d { grid-area: d; }
+.landing-root .mosaic-e { grid-area: e; }
+.landing-root .mosaic-f { grid-area: f; height: 170px; }
+
+.landing-root .mosaic-quote {
+  background: var(--l-green-deep);
+  color: var(--l-cream);
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+.landing-root .mosaic-quote span {
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.3;
+  white-space: pre-line;
+}
+.landing-root .mosaic-stat {
+  background: var(--l-cream-deep);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 20px;
+}
+.landing-root .mosaic-stat-num {
+  font-family: var(--font-display), serif;
+  font-size: 2.1rem;
+  color: var(--l-green-deep);
+  line-height: 1;
+}
+.landing-root .mosaic-stat span:last-child {
+  font-size: 0.82rem;
+  color: var(--l-ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.landing-root .mosaic-banner {
+  position: relative;
+}
+.landing-root .mosaic-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(49, 53, 42, 0.55) 0%, rgba(49, 53, 42, 0.05) 55%);
+}
+.landing-root .mosaic-banner-text {
+  position: absolute;
+  left: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: 1.7rem;
+  color: var(--l-paper);
+}
+
+@media (max-width: 700px) {
+  .landing-root .mosaic {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 140px 140px 140px 140px;
+    grid-template-areas:
+      "a a"
+      "b c"
+      "d e"
+      "f f";
+  }
+  .landing-root .mosaic-f { height: 140px; }
 }
 
 /* ---------- SECTION GENERIC ---------- */
@@ -234,18 +335,12 @@ html {
   transform: translateY(-6px);
   box-shadow: var(--l-shadow);
 }
-.landing-root .pillar-photo {
-  width: 100%;
-  height: 140px;
-  border-radius: 16px;
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-.landing-root .pillar-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.landing-root .pillar-num {
   display: block;
+  font-family: var(--font-display), serif;
+  font-size: 1.3rem;
+  color: var(--l-green);
+  margin-bottom: 16px;
 }
 .landing-root .pillar-card h3 { font-size: 1.15rem; margin-bottom: 10px; }
 .landing-root .pillar-card p { color: var(--l-ink-soft); font-size: 0.96rem; }
@@ -269,7 +364,7 @@ html {
   align-items: start;
 }
 .landing-root .program-item .week-label {
-  font-family: var(--font-literata), serif;
+  font-family: var(--font-display), serif;
   font-size: 1.6rem;
   color: var(--l-green);
 }
@@ -301,7 +396,7 @@ html {
 }
 .landing-root .value-item { background: var(--l-paper); padding: 38px; }
 .landing-root .value-item .num {
-  font-family: var(--font-literata), serif;
+  font-family: var(--font-display), serif;
   font-size: 1.1rem;
   color: var(--l-green);
   margin-bottom: 14px;
@@ -335,7 +430,7 @@ html {
 .landing-root .comp-inner p { font-size: 1.08rem; color: var(--l-ink-soft); margin-bottom: 20px; }
 .landing-root .comp-inner p.final {
   color: var(--l-ink);
-  font-family: var(--font-literata), serif;
+  font-family: var(--font-display), serif;
   font-size: 1.4rem;
   font-style: italic;
   line-height: 1.5;
@@ -383,7 +478,7 @@ html {
   padding: 6px 14px;
   border-radius: 999px;
 }
-.landing-root .pricing-name { font-family: var(--font-literata), serif; font-size: 1.4rem; margin-bottom: 6px; }
+.landing-root .pricing-name { font-family: var(--font-display), serif; font-size: 1.4rem; margin-bottom: 6px; }
 .landing-root .pricing-desc { font-size: 0.94rem; color: var(--l-ink-soft); margin-bottom: 18px; }
 .landing-root .pricing-old {
   font-size: 0.9rem;
@@ -392,7 +487,7 @@ html {
   opacity: 0.75;
 }
 .landing-root .pricing-price {
-  font-family: var(--font-literata), serif;
+  font-family: var(--font-display), serif;
   font-size: 2.2rem;
   margin-bottom: 18px;
 }
@@ -417,7 +512,7 @@ html {
   border-radius: 12px;
   padding: 12px 14px;
   font-size: 0.95rem;
-  font-family: var(--font-golos), sans-serif;
+  font-family: var(--font-sans-ui), sans-serif;
   background: var(--l-paper);
   color: var(--l-ink);
 }
@@ -438,7 +533,7 @@ html {
   list-style: none;
   padding: 22px 0;
   cursor: pointer;
-  font-family: var(--font-literata), serif;
+  font-family: var(--font-display), serif;
   font-size: 1.1rem;
   display: flex;
   justify-content: space-between;
