@@ -201,14 +201,17 @@ export function CourseLanding({
 
   return (
     <div className="landing-root" ref={rootRef}>
+      <div className="wrap brand-bar">
+        <span className="brand-name">Код Энергии</span>
+      </div>
       <header className="hero">
         <div className="hero-blob" />
         <div className="hero-blob two" />
         <div className="wrap hero-inner">
           <div>
-            <span className="kicker">Курс · 4 недели</span>
+            <span className="kicker">Код Энергии · курс, 4 недели</span>
             <h1>
-              Разберись, что на самом деле забирает твою <span className="hl">энергию</span>
+              Как избавиться от <span className="hl">хронической усталости</span> и вернуть ресурс за 4 недели
             </h1>
             <p className="lead">
               4 недели системной работы с четырьмя причинами хронической усталости: нервная система, ЖКТ, сахар,

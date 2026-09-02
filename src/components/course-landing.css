@@ -90,10 +90,24 @@ html {
   transform: none;
 }
 
+/* ---------- BRAND BAR ---------- */
+.landing-root .brand-bar {
+  padding: 28px 32px 0;
+  position: relative;
+  z-index: 2;
+}
+.landing-root .brand-name {
+  font-family: var(--font-literata), serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--l-green-deep);
+  letter-spacing: 0.01em;
+}
+
 /* ---------- HERO ---------- */
 .landing-root .hero {
   position: relative;
-  padding: 96px 0 80px;
+  padding: 40px 0 80px;
   overflow: hidden;
 }
 .landing-root .hero-blob {
