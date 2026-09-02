@@ -150,10 +150,10 @@ function AsciiPhoto({ src, alt }: { src: string; alt: string }) {
       }
 
       // 1. The photo itself, dimmed and green-tinted, so the subject stays recognisable.
-      ctx.filter = 'grayscale(1) brightness(0.55) sepia(1) hue-rotate(60deg) saturate(2.4)';
+      ctx.filter = 'grayscale(1) brightness(0.85) sepia(1) hue-rotate(60deg) saturate(2.2)';
       ctx.drawImage(img, sx, sy, sw, sh, 0, 0, width, height);
       ctx.filter = 'none';
-      ctx.fillStyle = 'rgba(10, 20, 10, 0.35)';
+      ctx.fillStyle = 'rgba(53, 89, 47, 0.25)';
       ctx.fillRect(0, 0, width, height);
 
       // 2. Sample the same cropped region at a coarse grid for the digit overlay.
@@ -277,7 +277,7 @@ const PROGRAM = [
     status: 'progress' as const,
     description:
       'Урок по висцеральному массажу от приглашённого специалиста, определение типа питания по Аюрведе, схемы восстановления для всех отделов ЖКТ.',
-    photo: 'https://images.unsplash.com/photo-1536511397145-ad62741fdf3c?w=400&q=75&fit=crop&auto=format',
+    photo: 'https://images.unsplash.com/photo-1676471926534-d5c9771909fa?w=400&q=75&fit=crop&auto=format',
   },
   {
     week: '03',
@@ -285,7 +285,7 @@ const PROGRAM = [
     status: 'progress' as const,
     description:
       'Работа с датчиком глюкозы (по желанию — можно пройти неделю и без него), что такое гликация и почему она ускоряет старение, практические рычаги стабилизации сахара.',
-    photo: 'https://images.unsplash.com/photo-1746415117048-794ef93871d5?w=400&q=75&fit=crop&auto=format',
+    photo: 'https://images.unsplash.com/photo-1619684743280-af5941f82eb3?w=400&q=75&fit=crop&auto=format',
   },
   {
     week: '04',
@@ -445,7 +445,7 @@ export function CourseLanding({
         <div className="wrap mosaic reveal">
           <div className="mosaic-tile mosaic-a">
             <img
-              src="https://images.unsplash.com/photo-1746415117048-794ef93871d5?w=900&q=80&fit=crop&auto=format"
+              src="https://images.unsplash.com/photo-1619684743280-af5941f82eb3?w=900&q=80&fit=crop&auto=format"
               alt=""
             />
             <CodeRain color="#1f3a1c" opacity={0.35} blend="multiply" />
@@ -457,7 +457,7 @@ export function CourseLanding({
           </div>
           <div className="mosaic-tile mosaic-c">
             <img
-              src="https://images.unsplash.com/photo-1536511397145-ad62741fdf3c?w=700&q=80&fit=crop&auto=format"
+              src="https://images.unsplash.com/photo-1676471926534-d5c9771909fa?w=700&q=80&fit=crop&auto=format"
               alt=""
             />
           </div>
@@ -491,16 +491,25 @@ export function CourseLanding({
           </div>
           <div className="pillar-grid">
             <div className="pillar-card reveal">
+              <div className="pillar-photo-round">
+                <img src="https://images.unsplash.com/photo-1695186376192-225e563b02e0?w=300&q=75&fit=crop&auto=format" alt="" />
+              </div>
               <span className="pillar-num">01</span>
               <h3>Видео-урок недели</h3>
               <p>Разбор одной системы организма за раз — без перегруза теорией сразу по всем направлениям.</p>
             </div>
             <div className="pillar-card reveal">
+              <div className="pillar-photo-round">
+                <img src="https://images.unsplash.com/photo-1676471926534-d5c9771909fa?w=300&q=75&fit=crop&auto=format" alt="" />
+              </div>
               <span className="pillar-num">02</span>
               <h3>Домашнее действие</h3>
               <p>Конкретный шаг под неделю — встраивается в день, а не требует отдельных часов.</p>
             </div>
             <div className="pillar-card reveal">
+              <div className="pillar-photo-round">
+                <img src="https://images.unsplash.com/photo-1619684743280-af5941f82eb3?w=300&q=75&fit=crop&auto=format" alt="" />
+              </div>
               <span className="pillar-num">03</span>
               <h3>Материалы для скачивания</h3>
               <p>Протоколы, чек-листы и схемы — остаются под рукой, не только на время урока.</p>
@@ -542,28 +551,42 @@ export function CourseLanding({
             <span className="kicker">Что ты получишь</span>
             <h2>Бонусы для всех тарифов</h2>
           </div>
-          <div className="value-grid reveal">
-            <div className="value-item">
-              <span className="num">01</span>
-              <p>Сборник рецептов под стабильный сахар.</p>
+          <div className="value-inner">
+            <div className="value-grid reveal">
+              <div className="value-item">
+                <span className="num">01</span>
+                <p>Сборник рецептов под стабильный сахар.</p>
+              </div>
+              <div className="value-item">
+                <span className="num">02</span>
+                <p>Чек-лист «какие анализы сдать», чтобы разговор с врачом был предметным.</p>
+              </div>
+              <div className="value-item">
+                <span className="num">03</span>
+                <p>Доступ в чат ещё 2–4 недели после окончания курса.</p>
+              </div>
+              <div className="value-item">
+                <span className="num">04</span>
+                <p>Материалы курса остаются доступны {ACCESS_DURATION_MONTHS} месяца — можно проходить в своём темпе.</p>
+              </div>
             </div>
-            <div className="value-item">
-              <span className="num">02</span>
-              <p>Чек-лист «какие анализы сдать», чтобы разговор с врачом был предметным.</p>
-            </div>
-            <div className="value-item">
-              <span className="num">03</span>
-              <p>Доступ в чат ещё 2–4 недели после окончания курса.</p>
-            </div>
-            <div className="value-item">
-              <span className="num">04</span>
-              <p>Материалы курса остаются доступны {ACCESS_DURATION_MONTHS} месяца — можно проходить в своём темпе.</p>
+            <div className="value-photo reveal">
+              <img
+                src="https://images.unsplash.com/photo-1676471926534-d5c9771909fa?w=700&q=80&fit=crop&auto=format"
+                alt=""
+              />
+              <DataPoints />
             </div>
           </div>
         </div>
       </section>
 
       <section className="recognize">
+        <img
+          className="recognize-bg"
+          src="https://images.unsplash.com/photo-1695186376192-225e563b02e0?w=1600&q=70&fit=crop&auto=format"
+          alt=""
+        />
         <CodeRain opacity={0.35} />
         <div className="wrap">
           <div className="section-head reveal">
@@ -605,25 +628,34 @@ export function CourseLanding({
             <span className="kicker">Чем это отличается</span>
             <h2>Чем отличается от других курсов и гайдов?</h2>
           </div>
-          <div className="comp-inner reveal">
-            <p>
-              Разовые БАДы и диеты наугад — можно пить магний, коллаген, сидеть на модной диете, но если непонятно,
-              какая именно система разладилась, эффект держится пару недель, потом всё возвращается.
-            </p>
-            <p>
-              Общие гайды в духе «10 привычек для энергии» — читаются легко, но ни одна привычка не приживается,
-              потому что советы не учитывают, что происходит именно внутри у тебя.
-            </p>
-            <p>
-              «Энергия за 7 дней» дала первый честный взгляд на проблему — но это только начало: 7 дней про быстрые
-              практические шаги, без глубокого разбора причин и без тем, которых там вообще не было — ЖКТ,
-              гликация, антиэйдж-протоколы.
-            </p>
-            <p className="final">
-              «Код Энергии» — это не ещё один список советов и не 7-дневный старт, а 4 недели системной работы со
-              всеми причинами усталости сразу: разобраться, что именно разладилось, и получить протокол под это, а
-              не под «всех».
-            </p>
+          <div className="comp-layout">
+            <div className="comp-inner reveal">
+              <p>
+                Разовые БАДы и диеты наугад — можно пить магний, коллаген, сидеть на модной диете, но если непонятно,
+                какая именно система разладилась, эффект держится пару недель, потом всё возвращается.
+              </p>
+              <p>
+                Общие гайды в духе «10 привычек для энергии» — читаются легко, но ни одна привычка не приживается,
+                потому что советы не учитывают, что происходит именно внутри у тебя.
+              </p>
+              <p>
+                «Энергия за 7 дней» дала первый честный взгляд на проблему — но это только начало: 7 дней про быстрые
+                практические шаги, без глубокого разбора причин и без тем, которых там вообще не было — ЖКТ,
+                гликация, антиэйдж-протоколы.
+              </p>
+              <p className="final">
+                «Код Энергии» — это не ещё один список советов и не 7-дневный старт, а 4 недели системной работы со
+                всеми причинами усталости сразу: разобраться, что именно разладилось, и получить протокол под это, а
+                не под «всех».
+              </p>
+            </div>
+            <div className="comp-photo reveal">
+              <img
+                src="https://images.unsplash.com/photo-1619684743280-af5941f82eb3?w=600&q=80&fit=crop&auto=format"
+                alt=""
+              />
+              <CodeRain opacity={0.4} />
+            </div>
           </div>
         </div>
       </section>
@@ -794,7 +826,7 @@ export function CourseLanding({
       <section className="final-cta">
         <img
           className="final-cta-bg"
-          src="https://images.unsplash.com/photo-1746415117048-794ef93871d5?w=1600&q=70&fit=crop&auto=format"
+          src="https://images.unsplash.com/photo-1619684743280-af5941f82eb3?w=1600&q=70&fit=crop&auto=format"
           alt=""
         />
         <div className="wrap">
