@@ -149,14 +149,30 @@ function HalfCodeCircle({ src, alt, size = 84 }: { src: string; alt: string; siz
         sy = (img.naturalHeight - sh) / 2;
       }
 
-      // Left half: the photo, plain.
-      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, size, size);
+      // Mirror the crop horizontally into its own canvas first. The source photo has
+      // its subject off-centre (right side), and we want it landing on the LEFT
+      // (plain) half of the circle rather than the shadow/background on that side.
+      const flipped = document.createElement('canvas');
+      flipped.width = sw;
+      flipped.height = sh;
+      const fctx = flipped.getContext('2d');
+      if (!fctx) return;
+      fctx.translate(sw, 0);
+      fctx.scale(-1, 1);
+      fctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+      sx = 0;
+      sy = 0;
+      const img2 = flipped;
 
-      // Right half: green base + brightness-sized dots (halftone).
+      // Left half: the photo, plain.
+      ctx.drawImage(img2, sx, sy, sw, sh, 0, 0, size, size);
+
+      // Right half: green base + a grid of 0/1 digits, same code motif as the rest of
+      // the page (not dots) — brighter source pixels get a bolder, more opaque digit.
       ctx.fillStyle = '#35592f';
       ctx.fillRect(r, 0, r, size);
 
-      const cols = 8;
+      const cols = 7;
       const cellSize = size / (cols * 2);
       const rows = Math.round(size / cellSize);
       const sample = document.createElement('canvas');
@@ -164,19 +180,21 @@ function HalfCodeCircle({ src, alt, size = 84 }: { src: string; alt: string; siz
       sample.height = rows;
       const sctx = sample.getContext('2d');
       if (sctx) {
-        sctx.drawImage(img, sx + sw / 2, sy, sw / 2, sh, 0, 0, cols, rows);
+        sctx.drawImage(img2, sx + sw / 2, sy, sw / 2, sh, 0, 0, cols, rows);
         const { data } = sctx.getImageData(0, 0, cols, rows);
+        ctx.font = `700 ${cellSize * 0.9}px var(--font-code), monospace`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
         for (let row = 0; row < rows; row++) {
           for (let col = 0; col < cols; col++) {
             const i = (row * cols + col) * 4;
             const brightness = (data[i] + data[i + 1] * 1.4 + data[i + 2]) / (2.4 * 255);
             const cx = r + cellSize * (col + 0.5);
             const cy = cellSize * (row + 0.5);
-            const dotR = Math.max(0.5, brightness * cellSize * 0.55);
-            ctx.beginPath();
-            ctx.fillStyle = '#c8ecb0';
-            ctx.arc(cx, cy, dotR, 0, Math.PI * 2);
-            ctx.fill();
+            const char = (row + col) % 2 === 0 ? '0' : '1';
+            const alpha = 0.35 + Math.min(1, brightness) * 0.65;
+            ctx.fillStyle = `rgba(200, 236, 176, ${alpha.toFixed(2)})`;
+            ctx.fillText(char, cx, cy);
           }
         }
       }
@@ -437,9 +455,9 @@ export function CourseLanding({
             <div className="wordmark-line">
               <span className="wordmark-k">К</span>
               <HalfCodeCircle
-                src="https://images.unsplash.com/photo-1679065103706-fd39ca1419a5?w=400&q=80&fit=crop&auto=format"
+                src="https://images.unsplash.com/photo-1610999162204-828195e48803?w=400&h=400&fit=crop&auto=format"
                 alt="О — половина яблока, половина код"
-                size={132}
+                size={188}
               />
               <span className="wordmark-k">Д</span>
             </div>

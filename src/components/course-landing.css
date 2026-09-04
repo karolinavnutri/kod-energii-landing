@@ -242,8 +242,8 @@ html {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 40px;
+  gap: 10px;
+  padding: 24px;
   background: var(--l-paper);
   border: 1px solid var(--l-line);
   border-radius: var(--l-radius);
@@ -253,24 +253,25 @@ html {
 .landing-root .wordmark-line {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 .landing-root .wordmark-k {
   font-family: var(--font-code), monospace;
   font-weight: 700;
-  font-size: 5.2rem;
+  font-size: clamp(4.2rem, 9vw, 6.8rem);
   line-height: 1;
   color: var(--l-green-deep);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 .landing-root .half-code-circle {
   border-radius: 50%;
   box-shadow: 0 8px 20px -8px rgba(53, 89, 47, 0.5);
+  flex: none;
 }
 .landing-root .wordmark-sub {
   font-family: var(--font-display), serif;
   font-style: italic;
-  font-size: 1.9rem;
+  font-size: clamp(2rem, 4vw, 2.8rem);
   color: var(--l-ink);
   margin-top: 4px;
 }
