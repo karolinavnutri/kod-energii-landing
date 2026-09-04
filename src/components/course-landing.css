@@ -237,25 +237,42 @@ html {
   max-width: 46ch;
   margin-bottom: 28px;
 }
-.landing-root .hero-photo {
-  position: relative;
+.landing-root .hero-wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 40px;
+  background: var(--l-paper);
+  border: 1px solid var(--l-line);
   border-radius: var(--l-radius);
-  overflow: hidden;
   box-shadow: var(--l-shadow);
   aspect-ratio: 4 / 5;
 }
-.landing-root .hero-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+.landing-root .wordmark-line {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
-.landing-root .ascii-photo {
-  width: 100%;
-  height: 100%;
+.landing-root .wordmark-k {
+  font-family: var(--font-code), monospace;
+  font-weight: 700;
+  font-size: 5.2rem;
+  line-height: 1;
+  color: var(--l-green-deep);
+  letter-spacing: -0.02em;
 }
-.landing-root .ascii-photo canvas {
-  display: block;
+.landing-root .half-code-circle {
+  border-radius: 50%;
+  box-shadow: 0 8px 20px -8px rgba(53, 89, 47, 0.5);
+}
+.landing-root .wordmark-sub {
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: 1.9rem;
+  color: var(--l-ink);
+  margin-top: 4px;
 }
 .landing-root .countdown {
   display: inline-flex;
@@ -788,7 +805,7 @@ html {
 
 @media (max-width: 860px) {
   .landing-root .hero-inner { grid-template-columns: 1fr; gap: 40px; }
-  .landing-root .hero-photo { max-width: 340px; }
+  .landing-root .hero-wordmark { max-width: 340px; }
   .landing-root .pillar-grid { grid-template-columns: 1fr; }
   .landing-root .value-grid { grid-template-columns: 1fr; }
   .landing-root .value-inner { grid-template-columns: 1fr; }

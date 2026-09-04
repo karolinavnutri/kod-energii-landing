@@ -106,96 +106,94 @@ function codeRainBackground(color: string) {
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
 
-// Renders a photo as a mosaic of 0/1 characters — density and brightness follow the
-// original pixel tones, so the subject stays readable while the image itself reads as
-// "made of code". Runs client-side on a canvas rather than shipping a pre-rendered asset.
-function AsciiPhoto({ src, alt }: { src: string; alt: string }) {
+// A round "half real photo / half dissolving into code" mark — stands in for the
+// letter "О" in the "КОД" wordmark. Left half is the plain photo; right half is the
+// same photo redrawn as a halftone of dots sized by brightness, in the brand green
+// (no black, per the no-black direction) rather than the reference's black ground.
+function HalfCodeCircle({ src, alt, size = 84 }: { src: string; alt: string; size?: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const wrap = wrapRef.current;
-    if (!canvas || !wrap) return;
-
+    if (!canvas) return;
     const img = new Image();
+    img.crossOrigin = 'anonymous';
     img.src = src;
     img.onload = () => {
-      const width = wrap.clientWidth;
-      const height = wrap.clientHeight;
       const dpr = window.devicePixelRatio || 1;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-
+      canvas.width = size * dpr;
+      canvas.height = size * dpr;
+      canvas.style.width = `${size}px`;
+      canvas.style.height = `${size}px`;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
       ctx.scale(dpr, dpr);
 
-      // Cover-fit the source image into width x height, same math as CSS object-fit: cover,
-      // so the sampled grid lines up with what a plain <img> would have shown.
+      const r = size / 2;
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(r, r, r, 0, Math.PI * 2);
+      ctx.clip();
+
+      // Cover-fit crop, centered.
       const srcRatio = img.naturalWidth / img.naturalHeight;
-      const dstRatio = width / height;
       let sw = img.naturalWidth;
       let sh = img.naturalHeight;
       let sx = 0;
       let sy = 0;
-      if (srcRatio > dstRatio) {
-        sw = img.naturalHeight * dstRatio;
+      if (srcRatio > 1) {
+        sw = img.naturalHeight;
         sx = (img.naturalWidth - sw) / 2;
       } else {
-        sh = img.naturalWidth / dstRatio;
+        sh = img.naturalWidth;
         sy = (img.naturalHeight - sh) / 2;
       }
 
-      // 1. The photo itself, dimmed and green-tinted, so the subject stays recognisable.
-      ctx.filter = 'grayscale(1) brightness(0.85) sepia(1) hue-rotate(60deg) saturate(2.2)';
-      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, width, height);
-      ctx.filter = 'none';
-      ctx.fillStyle = 'rgba(53, 89, 47, 0.25)';
-      ctx.fillRect(0, 0, width, height);
+      // Left half: the photo, plain.
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, size, size);
 
-      // 2. Sample the same cropped region at a coarse grid for the digit overlay.
-      const cols = 40;
-      const cellSize = width / cols;
-      const rows = Math.round(height / cellSize);
+      // Right half: green base + brightness-sized dots (halftone).
+      ctx.fillStyle = '#35592f';
+      ctx.fillRect(r, 0, r, size);
+
+      const cols = 8;
+      const cellSize = size / (cols * 2);
+      const rows = Math.round(size / cellSize);
       const sample = document.createElement('canvas');
       sample.width = cols;
       sample.height = rows;
       const sctx = sample.getContext('2d');
-      if (!sctx) return;
-      sctx.drawImage(img, sx, sy, sw, sh, 0, 0, cols, rows);
-      const { data } = sctx.getImageData(0, 0, cols, rows);
-
-      ctx.font = `${cellSize * 0.85}px var(--font-code), monospace`;
-      ctx.textBaseline = 'middle';
-      ctx.textAlign = 'center';
-      ctx.globalCompositeOperation = 'lighter';
-
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          const i = (row * cols + col) * 4;
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          const brightness = (r + g * 1.4 + b) / (2.4 * 255); // 0..~1.4, green-weighted
-          const char = (row * 7 + col * 3) % 2 === 0 ? '0' : '1';
-          const alpha = Math.max(0, Math.min(1, brightness - 0.15)) * 0.7;
-          if (alpha < 0.03) continue;
-          ctx.fillStyle = `rgba(150, 235, 130, ${alpha.toFixed(2)})`;
-          ctx.fillText(char, col * cellSize + cellSize / 2, row * cellSize + cellSize / 2);
+      if (sctx) {
+        sctx.drawImage(img, sx + sw / 2, sy, sw / 2, sh, 0, 0, cols, rows);
+        const { data } = sctx.getImageData(0, 0, cols, rows);
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const i = (row * cols + col) * 4;
+            const brightness = (data[i] + data[i + 1] * 1.4 + data[i + 2]) / (2.4 * 255);
+            const cx = r + cellSize * (col + 0.5);
+            const cy = cellSize * (row + 0.5);
+            const dotR = Math.max(0.5, brightness * cellSize * 0.55);
+            ctx.beginPath();
+            ctx.fillStyle = '#c8ecb0';
+            ctx.arc(cx, cy, dotR, 0, Math.PI * 2);
+            ctx.fill();
+          }
         }
       }
-      ctx.globalCompositeOperation = 'source-over';
-    };
-  }, [src]);
 
-  return (
-    <div className="ascii-photo" ref={wrapRef} role="img" aria-label={alt}>
-      <canvas ref={canvasRef} />
-    </div>
-  );
+      // Dividing line.
+      ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(r, 0);
+      ctx.lineTo(r, size);
+      ctx.stroke();
+
+      ctx.restore();
+    };
+  }, [src, size]);
+
+  return <canvas ref={canvasRef} className="half-code-circle" role="img" aria-label={alt} />;
 }
 
 // "Scanned" data-point overlay — a fixed (non-random) scatter of dots with thin
@@ -435,8 +433,17 @@ export function CourseLanding({
               </a>
             </div>
           </div>
-          <div className="hero-photo">
-            <AsciiPhoto src="/images/author/karolina.jpg" alt="Каролина Герасимова" />
+          <div className="hero-wordmark">
+            <div className="wordmark-line">
+              <span className="wordmark-k">К</span>
+              <HalfCodeCircle
+                src="https://images.unsplash.com/photo-1679065103706-fd39ca1419a5?w=400&q=80&fit=crop&auto=format"
+                alt="О — половина яблока, половина код"
+                size={132}
+              />
+              <span className="wordmark-k">Д</span>
+            </div>
+            <span className="wordmark-sub">энергии</span>
           </div>
         </div>
       </header>
