@@ -455,8 +455,8 @@ export function CourseLanding({
             <div className="wordmark-line">
               <span className="wordmark-k">К</span>
               <HalfCodeCircle
-                src="https://images.unsplash.com/photo-1610999162204-828195e48803?w=400&h=400&fit=crop&auto=format"
-                alt="О — половина яблока, половина код"
+                src="https://images.unsplash.com/photo-1516440484237-71ea3e37a052?w=500&h=500&fit=crop&auto=format"
+                alt="О — половина артишока, половина код"
                 size={188}
               />
               <span className="wordmark-k">Д</span>
