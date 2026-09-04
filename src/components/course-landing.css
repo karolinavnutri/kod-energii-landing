@@ -244,10 +244,9 @@ html {
   justify-content: center;
   gap: 10px;
   padding: 24px;
-  background: var(--l-paper);
+  background: var(--l-cream-deep);
   border: 1px solid var(--l-line);
   border-radius: var(--l-radius);
-  box-shadow: var(--l-shadow);
   aspect-ratio: 4 / 5;
 }
 .landing-root .wordmark-line {
@@ -256,12 +255,12 @@ html {
   gap: 10px;
 }
 .landing-root .wordmark-k {
-  font-family: var(--font-code), monospace;
+  font-family: var(--font-display), serif;
   font-weight: 700;
   font-size: clamp(4.2rem, 9vw, 6.8rem);
   line-height: 1;
   color: var(--l-green-deep);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
 }
 .landing-root .half-code-circle {
   border-radius: 50%;
