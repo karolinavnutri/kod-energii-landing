@@ -339,7 +339,7 @@ const PROGRAM = [
     status: 'progress' as const,
     description:
       'Работа с датчиком глюкозы (по желанию — можно пройти неделю и без него), что такое гликация и почему она ускоряет старение, практические рычаги стабилизации сахара.',
-    photo: 'https://images.unsplash.com/photo-1619684743280-af5941f82eb3?w=400&q=75&fit=crop&auto=format',
+    photo: 'https://images.unsplash.com/photo-1568387022280-92935eb78c5a?w=400&q=75&fit=crop&auto=format',
   },
   {
     week: '04',
@@ -509,14 +509,14 @@ export function CourseLanding({
         <div className="wrap mosaic reveal">
           <div className="mosaic-tile mosaic-a">
             <img
-              src="https://images.unsplash.com/photo-1619684743280-af5941f82eb3?w=900&q=80&fit=crop&auto=format"
+              src="https://images.unsplash.com/photo-1568387022280-92935eb78c5a?w=900&q=80&fit=crop&auto=format"
               alt=""
             />
             <CodeRain color="#1f3a1c" opacity={0.35} blend="multiply" />
           </div>
           <div className="mosaic-tile mosaic-b mosaic-quote">
             <CodeRain />
-            <span>Не выгорание.
+            <span>Не хаос.
 Система.</span>
           </div>
           <div className="mosaic-tile mosaic-c">
@@ -572,7 +572,7 @@ export function CourseLanding({
             </div>
             <div className="pillar-card reveal">
               <div className="pillar-photo-round">
-                <img src="https://images.unsplash.com/photo-1619684743280-af5941f82eb3?w=300&q=75&fit=crop&auto=format" alt="" />
+                <img src="https://images.unsplash.com/photo-1568387022280-92935eb78c5a?w=300&q=75&fit=crop&auto=format" alt="" />
               </div>
               <span className="pillar-num">03</span>
               <h3>Материалы для скачивания</h3>
@@ -715,7 +715,7 @@ export function CourseLanding({
             </div>
             <div className="comp-photo reveal">
               <img
-                src="https://images.unsplash.com/photo-1619684743280-af5941f82eb3?w=600&q=80&fit=crop&auto=format"
+                src="https://images.unsplash.com/photo-1568387022280-92935eb78c5a?w=600&q=80&fit=crop&auto=format"
                 alt=""
               />
               <CodeRain opacity={0.4} />
@@ -890,7 +890,7 @@ export function CourseLanding({
       <section className="final-cta">
         <img
           className="final-cta-bg"
-          src="https://images.unsplash.com/photo-1619684743280-af5941f82eb3?w=1600&q=70&fit=crop&auto=format"
+          src="https://images.unsplash.com/photo-1568387022280-92935eb78c5a?w=1600&q=70&fit=crop&auto=format"
           alt=""
         />
         <div className="wrap">
