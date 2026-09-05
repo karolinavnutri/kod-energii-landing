@@ -167,12 +167,22 @@ function HalfCodeCircle({ src, alt, size = 84 }: { src: string; alt: string; siz
       // Left half: the photo, plain.
       ctx.drawImage(img2, sx, sy, sw, sh, 0, 0, size, size);
 
-      // Right half: green base + a grid of 0/1 digits, same code motif as the rest of
-      // the page (not dots) — brighter source pixels get a bolder, more opaque digit.
-      ctx.fillStyle = '#35592f';
+      // Right half: the SAME photo, still visible as a shape — dimmed and green-tinted,
+      // with a fine grid of 0/1 digits over it whose opacity follows brightness. The
+      // artichoke's silhouette should still read here, just "rendered in code" rather
+      // than replaced by a flat colour block.
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(r, 0, r, size);
+      ctx.clip();
+      ctx.filter = 'grayscale(1) brightness(0.8) sepia(1) hue-rotate(60deg) saturate(2.2)';
+      ctx.drawImage(img2, sx, sy, sw, sh, 0, 0, size, size);
+      ctx.filter = 'none';
+      ctx.fillStyle = 'rgba(53, 89, 47, 0.55)';
       ctx.fillRect(r, 0, r, size);
+      ctx.restore();
 
-      const cols = 7;
+      const cols = 18;
       const cellSize = size / (cols * 2);
       const rows = Math.round(size / cellSize);
       const sample = document.createElement('canvas');
@@ -182,18 +192,19 @@ function HalfCodeCircle({ src, alt, size = 84 }: { src: string; alt: string; siz
       if (sctx) {
         sctx.drawImage(img2, sx + sw / 2, sy, sw / 2, sh, 0, 0, cols, rows);
         const { data } = sctx.getImageData(0, 0, cols, rows);
-        ctx.font = `700 ${cellSize * 0.9}px var(--font-code), monospace`;
+        ctx.font = `700 ${cellSize * 1.1}px var(--font-code), monospace`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         for (let row = 0; row < rows; row++) {
           for (let col = 0; col < cols; col++) {
             const i = (row * cols + col) * 4;
             const brightness = (data[i] + data[i + 1] * 1.4 + data[i + 2]) / (2.4 * 255);
+            if (brightness < 0.12) continue;
             const cx = r + cellSize * (col + 0.5);
             const cy = cellSize * (row + 0.5);
-            const char = (row + col) % 2 === 0 ? '0' : '1';
-            const alpha = 0.35 + Math.min(1, brightness) * 0.65;
-            ctx.fillStyle = `rgba(200, 236, 176, ${alpha.toFixed(2)})`;
+            const char = (row * 5 + col * 3) % 2 === 0 ? '0' : '1';
+            const alpha = Math.min(1, brightness) * 0.95;
+            ctx.fillStyle = `rgba(210, 240, 190, ${alpha.toFixed(2)})`;
             ctx.fillText(char, cx, cy);
           }
         }
@@ -455,7 +466,7 @@ export function CourseLanding({
             <div className="wordmark-line">
               <span className="wordmark-k">К</span>
               <HalfCodeCircle
-                src="https://images.unsplash.com/photo-1516440484237-71ea3e37a052?w=500&h=500&fit=crop&auto=format"
+                src="https://images.unsplash.com/photo-1664130034807-e4761baa846b?w=500&h=500&fit=crop&auto=format"
                 alt="О — половина артишока, половина код"
                 size={188}
               />
