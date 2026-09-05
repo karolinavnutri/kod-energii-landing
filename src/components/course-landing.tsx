@@ -110,7 +110,20 @@ function codeRainBackground(color: string) {
 // letter "О" in the "КОД" wordmark. Left half is the plain photo; right half is the
 // same photo redrawn as a halftone of dots sized by brightness, in the brand green
 // (no black, per the no-black direction) rather than the reference's black ground.
-function HalfCodeCircle({ src, alt, size = 84 }: { src: string; alt: string; size?: number }) {
+function HalfCodeCircle({
+  src,
+  alt,
+  size = 84,
+  cropRect,
+}: {
+  src: string;
+  alt: string;
+  size?: number;
+  // Fractions (0-1) of the source image to isolate a specific subject — e.g. one
+  // artichoke out of three in the same photo — instead of the generic centered-square
+  // guess. Skips the auto-mirror too, since the crop is already pointed deliberately.
+  cropRect?: { x: number; y: number; w: number; h: number };
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -135,34 +148,48 @@ function HalfCodeCircle({ src, alt, size = 84 }: { src: string; alt: string; siz
       ctx.arc(r, r, r, 0, Math.PI * 2);
       ctx.clip();
 
-      // Cover-fit crop, centered.
-      const srcRatio = img.naturalWidth / img.naturalHeight;
-      let sw = img.naturalWidth;
-      let sh = img.naturalHeight;
-      let sx = 0;
-      let sy = 0;
-      if (srcRatio > 1) {
-        sw = img.naturalHeight;
-        sx = (img.naturalWidth - sw) / 2;
-      } else {
-        sh = img.naturalWidth;
-        sy = (img.naturalHeight - sh) / 2;
-      }
+      let sw: number;
+      let sh: number;
+      let sx: number;
+      let sy: number;
+      let img2: HTMLImageElement | HTMLCanvasElement;
 
-      // Mirror the crop horizontally into its own canvas first. The source photo has
-      // its subject off-centre (right side), and we want it landing on the LEFT
-      // (plain) half of the circle rather than the shadow/background on that side.
-      const flipped = document.createElement('canvas');
-      flipped.width = sw;
-      flipped.height = sh;
-      const fctx = flipped.getContext('2d');
-      if (!fctx) return;
-      fctx.translate(sw, 0);
-      fctx.scale(-1, 1);
-      fctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
-      sx = 0;
-      sy = 0;
-      const img2 = flipped;
+      if (cropRect) {
+        sx = cropRect.x * img.naturalWidth;
+        sy = cropRect.y * img.naturalHeight;
+        sw = cropRect.w * img.naturalWidth;
+        sh = cropRect.h * img.naturalHeight;
+        img2 = img;
+      } else {
+        // Cover-fit crop, centered.
+        const srcRatio = img.naturalWidth / img.naturalHeight;
+        sw = img.naturalWidth;
+        sh = img.naturalHeight;
+        sx = 0;
+        sy = 0;
+        if (srcRatio > 1) {
+          sw = img.naturalHeight;
+          sx = (img.naturalWidth - sw) / 2;
+        } else {
+          sh = img.naturalWidth;
+          sy = (img.naturalHeight - sh) / 2;
+        }
+
+        // Mirror the crop horizontally into its own canvas first. The source photo has
+        // its subject off-centre (right side), and we want it landing on the LEFT
+        // (plain) half of the circle rather than the shadow/background on that side.
+        const flipped = document.createElement('canvas');
+        flipped.width = sw;
+        flipped.height = sh;
+        const fctx = flipped.getContext('2d');
+        if (!fctx) return;
+        fctx.translate(sw, 0);
+        fctx.scale(-1, 1);
+        fctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+        sx = 0;
+        sy = 0;
+        img2 = flipped;
+      }
 
       // Left half: the photo, plain.
       ctx.drawImage(img2, sx, sy, sw, sh, 0, 0, size, size);
@@ -466,9 +493,10 @@ export function CourseLanding({
             <div className="wordmark-line">
               <span className="wordmark-k">К</span>
               <HalfCodeCircle
-                src="https://images.unsplash.com/photo-1664130034807-e4761baa846b?w=500&h=500&fit=crop&auto=format"
+                src="https://images.unsplash.com/photo-1587576293597-a5a06ee59239?w=1200&auto=format"
                 alt="О — половина артишока, половина код"
                 size={188}
+                cropRect={{ x: 0.25, y: 0.03, w: 0.54, h: 0.31 }}
               />
               <span className="wordmark-k">Д</span>
             </div>
@@ -866,6 +894,14 @@ export function CourseLanding({
           alt=""
         />
         <div className="wrap">
+          <div className="final-cta-mark reveal">
+            <HalfCodeCircle
+              src="https://images.unsplash.com/photo-1587576293597-a5a06ee59239?w=1200&auto=format"
+              alt=""
+              size={64}
+              cropRect={{ x: 0.25, y: 0.03, w: 0.54, h: 0.31 }}
+            />
+          </div>
           <span className="kicker reveal">Пора начать</span>
           <h2 className="reveal">4 недели. Твоя система, твой протокол, твой ответ.</h2>
           <p className="reveal">
@@ -880,8 +916,16 @@ export function CourseLanding({
       </section>
 
       <footer>
-        <div className="wrap" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: 12 }}>
-          <span>Код Энергии · karolina.vnutri</span>
+        <div className="wrap" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', flexWrap: 'wrap', gap: 12 }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+            <HalfCodeCircle
+              src="https://images.unsplash.com/photo-1587576293597-a5a06ee59239?w=1200&auto=format"
+              alt=""
+              size={28}
+              cropRect={{ x: 0.25, y: 0.03, w: 0.54, h: 0.31 }}
+            />
+            Код Энергии · karolina.vnutri
+          </span>
           <span>Следующий шаг после «Энергии за 7 дней»</span>
         </div>
         <div className="wrap" style={{ width: '100%', marginTop: 8, display: 'flex', gap: 16 }}>

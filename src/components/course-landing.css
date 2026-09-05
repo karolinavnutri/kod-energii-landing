@@ -789,6 +789,7 @@ html {
   z-index: 0;
 }
 .landing-root .final-cta .wrap { position: relative; z-index: 1; }
+.landing-root .final-cta-mark { display: flex; justify-content: center; margin-bottom: 14px; }
 .landing-root .final-cta h2 { font-size: clamp(2rem, 4vw, 2.7rem); max-width: 22ch; margin: 0 auto 20px; }
 .landing-root .final-cta p { color: var(--l-ink-soft); max-width: 46ch; margin: 0 auto 28px; }
 .landing-root .final-cta .btn { width: auto; padding: 18px 40px; }
